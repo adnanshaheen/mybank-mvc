@@ -1,6 +1,6 @@
 ﻿namespace MyBankMVC15.Service
 {
-    public class AuthenticationAbstraction
+    public class AuthenticationAbstraction : IAuthenticationAbstraction
     {
         IAuthenticationService _authService = null;
 

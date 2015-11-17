@@ -9,13 +9,13 @@ namespace MyBankMVC15.Controllers
     [HandleError]
     public class AuthController : Controller
     {
-        public IAuthenticationService AuthService { get; set; }
+        public IAuthenticationAbstraction AuthService { get; set; }
         // public IMyMembershipService MyMembershipService { get; set; }
 
         protected override void Initialize(RequestContext requestContext)
         {
             if (AuthService == null)
-                AuthService = GenericFactory<AuthenticationService, IAuthenticationService>.CreateInstance();
+                AuthService = GenericFactory<AuthenticationAbstraction, IAuthenticationAbstraction>.CreateInstance();
            
             base.Initialize(requestContext);
         }
