@@ -1,0 +1,62 @@
+﻿@model MyBankMVC15.Models.UpdatePassword
+
+@{
+    ViewBag.Title = "ChangePwd";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<h2>Change Password</h2>
+@using (Html.BeginForm())
+{
+<table class="style1">
+    <tr>
+        <td class="myHeading">Change password:</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td align="right">
+            Old Password
+        </td>
+        <td>
+            @Html.PasswordFor(m => m.oldPassword)
+        </td>
+        <td>
+            @Html.ValidationMessageFor(m => m.oldPassword)
+        </td>
+    </tr>
+    <tr>
+        <td align="right">
+            New Password
+        </td>
+        <td>
+            @Html.PasswordFor(m => m.newPassword)
+        </td>
+        <td>
+            @Html.ValidationMessageFor(m => m.newPassword)
+        </td>
+    </tr>
+    <tr>
+        <td align="right">
+            Re-type new
+        </td>
+        <td>
+            @Html.PasswordFor(m => m.reNewPassword)
+        </td>
+        <td>
+            @Html.ValidationMessageFor(m => m.reNewPassword)
+        </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>
+            <input type="submit" value="Update Password" name="updPwd" id="updPwd" />
+        </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>
+            @Html.DisplayTextFor(m => m.Status)
+        </td>
+    </tr>
+</table>
+}
