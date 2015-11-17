@@ -1,9 +1,6 @@
-﻿using MyBankMVC15.Models;
-using MyBankMVC15.Services;
+﻿using MyBankMVC15.Service;
+using MyBankMVC15.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -12,12 +9,13 @@ namespace MyBankMVC15.Controllers
     [HandleError]
     public class AuthController : Controller
     {
-        public IMyAuthenticationService MyAuthService { get; set; }
+        public IAuthenticationService AuthService { get; set; }
         // public IMyMembershipService MyMembershipService { get; set; }
 
         protected override void Initialize(RequestContext requestContext)
         {
-            if (MyAuthService == null) { MyAuthService = new MyAuthenticationService(); }
+            if (AuthService == null)
+                AuthService = GenericFactory<AuthenticationService, IAuthenticationService>.CreateInstance();
            
             base.Initialize(requestContext);
         }
@@ -33,7 +31,7 @@ namespace MyBankMVC15.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (MyAuthService.SignIn(model.Username, model.Password, false))
+                if (AuthService.SignIn(model.Username, model.Password, false))
                 {
                     if (!String.IsNullOrEmpty(returnUrl))
                     {
@@ -56,7 +54,7 @@ namespace MyBankMVC15.Controllers
 
         public ActionResult LogOff()
         {
-            MyAuthService.SignOut();
+            AuthService.SignOut();
             return RedirectToAction("Index", "Home");
         }
 
@@ -79,9 +77,9 @@ namespace MyBankMVC15.Controllers
                 {
                     string userName = Utils.StripPunctuation(HttpContext.User.Identity.Name);
 
-                    if (MyAuthService.ValidateUser(userName, oldPwd))
+                    if (AuthService.ValidateUser(userName, oldPwd))
                     {
-                        if (MyAuthService.ChangePassword(userName, oldPwd, newPwd))
+                        if (AuthService.ChangePassword(userName, oldPwd, newPwd))
                             model.Status = "Password udpated successfully.";
                         else
                             model.Status = "Couldn't change password!!!";

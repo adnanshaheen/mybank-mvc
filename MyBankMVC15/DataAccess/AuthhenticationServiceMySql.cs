@@ -1,32 +1,36 @@
-﻿using MyBankMVC15.Models;
+﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
+using System.Data.Common;
 using System.Web;
 using System.Web.Security;
 
-namespace MyBankMVC15.Services
+namespace MyBankMVC15.Service
 {
-    public class MyAuthenticationService : IMyAuthenticationService
+    public class AuthhenticationServiceMySql : IAuthenticationService
     {
-        public object SessionKeys { get; private set; }
+        private IDataAccess _idataAccess;
+
+        public AuthhenticationServiceMySql()
+        {
+            _idataAccess = GenericFactory<DataAccessMySql, IDataAccess>.CreateInstance();
+        }
 
         public string GetRolesForUser(string uname)
         {
             string roles = "";
-            string connStr = ConfigurationManager.ConnectionStrings["BANKDBCONN"].ConnectionString;
-            SqlConnection conn = new SqlConnection(connStr);
+            string connStr = ConfigurationManager.ConnectionStrings["BANKMYSQLCONN"].ConnectionString;
+            MySqlConnection conn = new MySqlConnection(connStr);
 
             try
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("GetUserRoles", conn);
+                MySqlCommand cmd = new MySqlCommand("GetUserRoles", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@Username", uname));
-                SqlDataReader reader = cmd.ExecuteReader();
+                cmd.Parameters.Add(new MySqlParameter("@Username", uname));
+                MySqlDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                     roles += reader["RoleName"].ToString() + "|";
@@ -80,18 +84,37 @@ namespace MyBankMVC15.Services
         public bool ChangePassword(string userName, string password, string newPassword)
         {
             bool bRes = false;
+            if (String.IsNullOrEmpty(userName))
+                throw new ArgumentException("Value cannot be null or empty.", "userName");
+            if (String.IsNullOrEmpty(password))
+                throw new ArgumentException("Value cannot be null or empty.", "password");
+            if (String.IsNullOrEmpty(newPassword))
+                throw new ArgumentException("Value cannot be null or empty.", "newPassword");
+
             try
             {
-                if (String.IsNullOrEmpty(userName))
-                    throw new ArgumentException("Value cannot be null or empty.", "userName");
-                if (String.IsNullOrEmpty(password))
-                    throw new ArgumentException("Value cannot be null or empty.", "password");
-                if (String.IsNullOrEmpty(newPassword))
-                    throw new ArgumentException("Value cannot be null or empty.", "newPassword");
-
-
+                // user is already validated in AuthController.cs
+                // Hence we don't need to validate again
+                string sql = "update Users set Password=@newPassword where " +
+                     "Username=@userName and Password=@password";
+                List<DbParameter> PList = new List<DbParameter>();
+                DbParameter p1 = new MySqlParameter("@uname", MySqlDbType.VarChar, 50);
+                p1.Value = userName;
+                PList.Add(p1);
+                DbParameter p2 = new MySqlParameter("@userName", MySqlDbType.VarChar, 50);
+                p2.Value = password;
+                PList.Add(p2);
+                DbParameter p3 = new MySqlParameter("@newPassword", MySqlDbType.VarChar, 50);
+                p3.Value = newPassword;
+                PList.Add(p3);
+                object obj = _idataAccess.GetSingleAnswer(sql, PList);
+                if (obj != null)
+                {
+                    // Check the obj, it should have the userName
+                    bRes = true;
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -111,12 +134,12 @@ namespace MyBankMVC15.Services
             string sql = "select Username from Users where Username='" +
                                  userName + "' and Password='" + password + "'";
             string connStr = ConfigurationManager.ConnectionStrings["BANKDBCONN"].ConnectionString;
-            SqlConnection conn = new SqlConnection(connStr);
+            MySqlConnection conn = new MySqlConnection(connStr);
             object obj = null;
             try
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand(sql, conn);
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
                 obj = cmd.ExecuteScalar();
                 conn.Close();
             }

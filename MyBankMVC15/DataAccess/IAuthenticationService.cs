@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MyBankMVC15.Models
+﻿namespace MyBankMVC15.Service
 {
-    public interface IMyAuthenticationService
+    public interface IAuthenticationService
     {
         bool ValidateUser(string userName, string password);
         string GetRolesForUser(string uname);
