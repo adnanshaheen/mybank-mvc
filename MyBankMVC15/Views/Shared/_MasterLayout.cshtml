@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewBag.Title = "_MasterLayout";
+}
+<html>
+<head>
+    <link href="~/Content/MainStyle.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#navTable tr").hover(function () {
+                $(this).addClass("navHighlight");},
+                function(){$(this).removeClass("navHighlight");}
+            );
+        });
+    </script>
+</head>
+<body>
+    <table border="0" style="width:100%">
+    <tr>
+        <td colspan="2" class="myBanner">
+            MyBank MVC Application
+        </td>
+    </tr>
+        <tr>
+            <td style="vertical-align:top;">
+                <table id="navTable" border="1" style="border-collapse:collapse">
+                    <tr>
+                        <td>@Html.ActionLink("Home","Index","Home")</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ActionLink("News", "News", "Home")</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ActionLink("Login", "Login", "Auth")</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ActionLink("Transfer ChkToSav", "XferChkToSav", "Home")</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ActionLink("Transaction History", "TransHistory", "Home")</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.ActionLink("Change Password", "ChangePwd", "Auth")</td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width:90%;vertical-align:top;padding-left:100px;padding-top:20px">
+                @RenderBody()
+            </td>
+        </tr>
+    </table>
+    </body>
+</html>
+

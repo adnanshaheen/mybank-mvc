@@ -1,0 +1,27 @@
+﻿@model MyBankMVC15.Models.LoginModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<h2>Please Login</h2>
+@using (Html.BeginForm()) {
+<table border="0" style="width:500px">
+    <tr>
+        <td>@Html.DisplayNameFor(m => m.Username)</td>
+        <td>@Html.TextBoxFor(m => m.Username)</td>
+        <td>@Html.ValidationMessageFor(m => m.Username)</td>
+    </tr>
+    <tr>
+        <td>@Html.DisplayNameFor(m => m.Password)</td>
+        <td>@Html.PasswordFor(m => m.Password)</td>
+        <td>@Html.ValidationMessageFor(m => m.Password)</td>
+    </tr>
+    <tr>
+        <td><input type="submit" value="cancel" name="btnCancel" id="btnCancel"/></td>
+        <td><input type="submit" value="Login" name="btnLogin" id="btnLogin"/></td>
+    </tr>
+</table>
+}
+
