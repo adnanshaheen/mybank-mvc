@@ -16,5 +16,7 @@ namespace MyBankMVC15.Models
 
         [Required(ErrorMessage ="New password is required ...")]
         public string reNewPassword { get; set; }
+
+        public string Status { get; set; }
     }
 }

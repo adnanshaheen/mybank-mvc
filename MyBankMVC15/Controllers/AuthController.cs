@@ -62,7 +62,41 @@ namespace MyBankMVC15.Controllers
 
         public ActionResult ChangePwd()
         {
-            return View();
+            UpdatePassword model = new UpdatePassword();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ChangePwd(UpdatePassword model)
+        {
+            if (ModelState.IsValid)
+            {
+                string oldPwd = Utils.StripPunctuation(model.oldPassword);
+                string newPwd = Utils.StripPunctuation(model.newPassword);
+                string rePwd = Utils.StripPunctuation(model.reNewPassword);
+
+                if (rePwd.Equals(newPwd))
+                {
+                    string userName = Utils.StripPunctuation(HttpContext.User.Identity.Name);
+
+                    if (MyAuthService.ValidateUser(userName, oldPwd))
+                    {
+                        if (MyAuthService.ChangePassword(userName, oldPwd, newPwd))
+                            model.Status = "Password udpated successfully.";
+                        else
+                            model.Status = "Couldn't change password!!!";
+                    }
+                    else
+                    {
+                        model.Status = "Invalid old password ...";
+                    }
+                }
+                else
+                {
+                    model.Status = "New passwords mismatch ...";
+                }
+            }
+            return View(model);
         }
     }
 }

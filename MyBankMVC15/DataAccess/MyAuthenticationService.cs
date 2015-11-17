@@ -77,6 +77,27 @@ namespace MyBankMVC15.Services
 
         }
 
+        public bool ChangePassword(string userName, string password, string newPassword)
+        {
+            bool bRes = false;
+            try
+            {
+                if (String.IsNullOrEmpty(userName))
+                    throw new ArgumentException("Value cannot be null or empty.", "userName");
+                if (String.IsNullOrEmpty(password))
+                    throw new ArgumentException("Value cannot be null or empty.", "password");
+                if (String.IsNullOrEmpty(newPassword))
+                    throw new ArgumentException("Value cannot be null or empty.", "newPassword");
+
+
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            return bRes;
+        }
+
         public void SignOut()
         {
             FormsAuthentication.SignOut();
