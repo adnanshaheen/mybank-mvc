@@ -8,6 +8,7 @@ using System.Web;
 /// </summary>
 public interface IBusinessAbstraction
 {
+    string GetCheckingAccount(string userName);
     bool TransferFromChkgToSav(string chkAcctNum, string savAcctNum, double amt);
     double GetCheckingBalance(string chkAcctNum);
     double GetSavingBalance(string savAcctNum);

@@ -91,4 +91,20 @@ public class BusinessLayer : IBusinessAccount
     }
 
     #endregion
+
+    #region IBusinessAccount Members
+    public string GetCheckingAccount(string userName)
+    {
+        string AccountNumber = "";
+        try
+        {
+            AccountNumber = idac.GetCheckingAccount(userName);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+        return AccountNumber;
+    }
+    #endregion
 }

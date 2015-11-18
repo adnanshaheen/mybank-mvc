@@ -242,4 +242,31 @@ public class Repository : IRepositoryDataAccount
         };
         return dt;
     }
+
+    #region IDataAccount Members
+
+    public string GetCheckingAccount(string userName)
+    {
+        string Account = "";
+        if (String.IsNullOrEmpty(userName)) throw new ArgumentException("Value cannot be null or empty.", "userName");
+
+        try
+        {
+            string sql = "select AccountNumber from Users where Username=@userName";
+
+            List<DbParameter> PList = new List<DbParameter>();
+            DbParameter p1 = new SqlParameter("@userName", SqlDbType.VarChar, 50);
+            p1.Value = userName;
+            PList.Add(p1);
+            object obj = _idataAccess.GetSingleAnswer(sql, PList);
+            if (obj != null)
+                Account = obj.ToString();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        return Account;
+    }
+    #endregion
 }

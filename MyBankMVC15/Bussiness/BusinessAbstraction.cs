@@ -16,16 +16,15 @@ public class BusinessAbstraction : IBusinessAbstraction
         _idac = idac;
 	}
 
-    //public BusinessAbstraction() :
-    //    this(GenericFactory<Repository, IRepositoryDataAuthentication>.CreateInstance(),
-    //    GenericFactory<Repository, IRepositoryDataAccount>.CreateInstance())
-    //{
-    //}
-
     public BusinessAbstraction() :
-        this(GenericFactory<RepositoryMySql, IRepositoryDataAccount>.CreateInstance())
+        this(GenericFactory<Repository, IRepositoryDataAccount>.CreateInstance())
     {
     }
+
+    //public BusinessAbstraction() :
+    //    this(GenericFactory<RepositoryMySql, IRepositoryDataAccount>.CreateInstance())
+    //{
+    //}
 
     #region IBusinessAccount Members
 
@@ -60,6 +59,14 @@ public class BusinessAbstraction : IBusinessAbstraction
     public List<TransferHistory> GetTransferHistory(string chkAcctNum)
     {
         return _idac.GetTransferHistory(chkAcctNum);
+    }
+
+    #endregion
+
+    #region IBusinessAccount members
+    public string GetCheckingAccount(string userName)
+    {
+        return _idac.GetCheckingAccount(userName);
     }
 
     #endregion

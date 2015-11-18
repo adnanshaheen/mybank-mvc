@@ -35,7 +35,9 @@ namespace MyBankMVC15.Controllers
         public ActionResult XferChkToSav()
         {
             XferChkToSavModel model = new XferChkToSavModel();
-            //model.CheckingBalance = _business.GetCheckingBalance();
+            string ChkAcctNum = _business.GetCheckingAccount(HttpContext.User.Identity.Name);
+            model.CheckingBalance = _business.GetCheckingBalance(ChkAcctNum);
+            model.SavingBalance = _business.GetSavingBalance(ChkAcctNum + "1");
             return View(model);
         }
     }
