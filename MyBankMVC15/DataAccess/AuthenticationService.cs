@@ -100,21 +100,16 @@ namespace MyBankMVC15.Service
                 string sql = "update Users set Password=@newPassword where " +
                      "Username=@userName and Password=@password";
                 List<DbParameter> PList = new List<DbParameter>();
-                DbParameter p1 = new SqlParameter("@uname", SqlDbType.VarChar, 50);
-                p1.Value = userName;
+                DbParameter p1 = new SqlParameter("@newPassword", SqlDbType.VarChar, 50);
+                p1.Value = newPassword;
                 PList.Add(p1);
                 DbParameter p2 = new SqlParameter("@userName", SqlDbType.VarChar, 50);
-                p2.Value = password;
+                p2.Value = userName;
                 PList.Add(p2);
-                DbParameter p3 = new SqlParameter("@newPassword", SqlDbType.VarChar, 50);
-                p3.Value = newPassword;
+                DbParameter p3 = new SqlParameter("@password", SqlDbType.VarChar, 50);
+                p3.Value = password;
                 PList.Add(p3);
-                object obj = _idataAccess.GetSingleAnswer(sql, PList);
-                if (obj != null)
-                {
-                    // Check the obj, it should have the userName
-                    bRes = true;
-                }
+                bRes = _idataAccess.InsOrUpdOrDel(sql, PList) >= 1 ? true : false;
             }
             catch (Exception ex)
             {

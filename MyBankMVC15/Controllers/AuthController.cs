@@ -58,6 +58,7 @@ namespace MyBankMVC15.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize]
         public ActionResult ChangePwd()
         {
             UpdatePassword model = new UpdatePassword();
