@@ -15,7 +15,10 @@ namespace MyBankMVC15.Controllers
 
         protected override void Initialize(RequestContext requestContext)
         {
-            _business = GenericFactory<BusinessAbstraction, IBusinessAbstraction>.CreateInstance();
+            if (_business == null)
+                _business = GenericFactory<BusinessAbstraction, IBusinessAbstraction>.CreateInstance();
+
+            base.Initialize(requestContext);
         }
 
         // GET: Home
