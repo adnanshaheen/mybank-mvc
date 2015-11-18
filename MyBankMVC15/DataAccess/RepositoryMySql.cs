@@ -248,7 +248,7 @@ public class RepositoryMySql : IRepositoryDataAccount
 
         try
         {
-            string sql = "select AccountNumber from Users where Username=@userName";
+            string sql = "select CheckingAccountNum from Users where Username=@userName";
 
             List<DbParameter> PList = new List<DbParameter>();
             DbParameter p1 = new MySqlParameter("@userName", MySqlDbType.VarChar, 50);

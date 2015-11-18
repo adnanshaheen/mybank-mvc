@@ -252,7 +252,7 @@ public class Repository : IRepositoryDataAccount
 
         try
         {
-            string sql = "select AccountNumber from Users where Username=@userName";
+            string sql = "select CheckingAccountNum from Users where Username=@userName";
 
             List<DbParameter> PList = new List<DbParameter>();
             DbParameter p1 = new SqlParameter("@userName", SqlDbType.VarChar, 50);
