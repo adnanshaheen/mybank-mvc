@@ -38,9 +38,24 @@ namespace MyBankMVC15.Controllers
         public ActionResult XferChkToSav()
         {
             XferChkToSavModel model = new XferChkToSavModel();
-            string ChkAcctNum = _business.GetCheckingAccount(HttpContext.User.Identity.Name);
-            model.CheckingBalance = _business.GetCheckingBalance(ChkAcctNum);
-            model.SavingBalance = _business.GetSavingBalance(ChkAcctNum + "1");
+            model.AccountNumber = _business.GetCheckingAccount(HttpContext.User.Identity.Name);
+            model.CheckingBalance = _business.GetCheckingBalance(model.AccountNumber);
+            model.SavingBalance = _business.GetSavingBalance(model.AccountNumber + "1");
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult XferChkToSav(XferChkToSavModel model)
+        {
+            if (model.CheckingBalance < model.AmountTransfer)
+                model.Status = "Not enough balance ...";
+            else
+            {
+                if (_business.TransferFromChkgToSav(model.AccountNumber, model.AccountNumber + "1", model.AmountTransfer))
+                    model.Status = "amount transfered successfully ...";
+                else
+                    model.Status = "Couldn't transfer your amount ...";
+            }
             return View(model);
         }
     }

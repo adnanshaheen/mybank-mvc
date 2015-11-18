@@ -7,6 +7,7 @@
 
 @using (Html.BeginForm())
 {
+    @Html.HiddenFor(m => m.AccountNumber);
     <table class="style1">
         <tr>
             <td class="myHeading" colspan="3">
@@ -29,7 +30,7 @@
                 &nbsp;
             </td>
             <td align="right">
-                Checking Balance
+                @Html.DisplayNameFor(m => m.CheckingBalance)
             </td>
             <td>
                 @Model.CheckingBalance
@@ -41,7 +42,7 @@
                 &nbsp;
             </td>
             <td align="right">
-                Saving Balance
+                @Html.DisplayNameFor(m => m.SavingBalance)
             </td>
             <td>
                 @Model.SavingBalance
@@ -64,7 +65,7 @@
                 &nbsp;
             </td>
             <td align="right">
-                Amount To Transfer
+                @Html.DisplayNameFor(m => m.AmountTransfer)
                 @Html.TextBoxFor(m => m.AmountTransfer)
             </td>
             <td>

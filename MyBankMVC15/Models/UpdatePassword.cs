@@ -15,6 +15,7 @@ namespace MyBankMVC15.Models
         public string newPassword { get; set; }
 
         [Required(ErrorMessage ="New password is required ...")]
+        [CompareAttribute("newPassword", ErrorMessage = "Passwords don't match.")]
         public string reNewPassword { get; set; }
 
         public string Status { get; set; }
