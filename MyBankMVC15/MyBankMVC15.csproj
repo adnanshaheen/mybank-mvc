@@ -145,7 +145,6 @@
     <Compile Include="Bussiness\BusinessLayer.cs" />
     <Compile Include="Bussiness\IBusinessAbstraction.cs" />
     <Compile Include="Bussiness\IBusinessAccount.cs" />
-    <Compile Include="Bussiness\IBusinessAuthentication.cs" />
     <Compile Include="Cache\CacheAbstraction.cs" />
     <Compile Include="Cache\HttpContextCacheAdapter.cs" />
     <Compile Include="Cache\IWebCache.cs" />
@@ -153,14 +152,13 @@
     <Compile Include="Cache\NullObjectCache.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="DataAccess\AuthenticationAbstraction.cs" />
+    <Compile Include="Bussiness\AuthenticationAbstraction.cs" />
     <Compile Include="DataAccess\AuthhenticationServiceMySql.cs" />
     <Compile Include="DataAccess\DataAccess.cs" />
     <Compile Include="DataAccess\DataAccessMySql.cs" />
-    <Compile Include="DataAccess\IAuthenticationAbstraction.cs" />
+    <Compile Include="Bussiness\IAuthenticationAbstraction.cs" />
     <Compile Include="DataAccess\IDataAccess.cs" />
     <Compile Include="DataAccess\IRepositoryDataAccount.cs" />
-    <Compile Include="DataAccess\IRepositoryDataAuthentication.cs" />
     <Compile Include="DataAccess\Repository.cs" />
     <Compile Include="DataAccess\RepositoryMySql.cs" />
     <Compile Include="Global.asax.cs">
@@ -169,6 +167,7 @@
     <Compile Include="DataAccess\IAuthenticationService.cs" />
     <Compile Include="Models\UpdatePassword.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\XferChkToSavModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataAccess\AuthenticationService.cs" />
     <Compile Include="Utilities\GenericFactory.cs" />
@@ -190,6 +189,7 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Auth\Login.cshtml" />
     <Content Include="Views\Auth\ChangePwd.cshtml" />
+    <Content Include="Views\Home\XferChkToSav.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -8,7 +8,7 @@ using MySql.Data.MySqlClient;
 /// <summary>
 /// Summary description for RespositoryMySql
 /// </summary>
-public class RepositoryMySql : IRepositoryDataAccount, IRepositoryDataAuthentication
+public class RepositoryMySql : IRepositoryDataAccount
 {
     IDataAccess _idataAccess = null;
     CacheAbstraction webCache = null;
@@ -24,36 +24,6 @@ public class RepositoryMySql : IRepositoryDataAccount, IRepositoryDataAuthentica
         new CacheAbstraction())
     {
     }
-
-    #region IDataAuthentication Members
-
-    public string IsValidUser(string uname, string pwd)
-    {
-        string res = "";
-        try
-        {
-            string sql = "select CheckingAccountNum from users where " +
-                "Username=@uname and Password=@pwd";
-            List<DbParameter> PList = new List<DbParameter>();
-            DbParameter p1 = new MySqlParameter("@uname", MySqlDbType.VarChar, 50);
-            p1.Value = uname;
-            PList.Add(p1);
-            DbParameter p2 = new MySqlParameter("@pwd", MySqlDbType.VarChar, 50);
-            p2.Value = pwd;
-            PList.Add(p2);
-            object obj = _idataAccess.GetSingleAnswer(sql, PList);
-            if (obj != null)
-                res = obj.ToString();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-
-        return res;
-    }
-
-    #endregion
 
     #region IDataAccount Members
 
@@ -267,35 +237,5 @@ public class RepositoryMySql : IRepositoryDataAccount, IRepositoryDataAuthentica
             throw ex;
         };
         return dt;
-    }
-
-
-    public bool UpdatePassword(string uname, string oldPW, string newPW)
-    {
-        string res = "";
-        try
-        {
-            res = IsValidUser(uname, oldPW);
-            string sql = "update Users set Password=@newPW where " +
-                "Username=@uname and Password=@oldPW";
-            List<DbParameter> PList = new List<DbParameter>();
-            DbParameter p1 = new MySqlParameter("@uname", MySqlDbType.VarChar, 50);
-            p1.Value = uname;
-            PList.Add(p1);
-            DbParameter p2 = new MySqlParameter("@oldPW", MySqlDbType.VarChar, 50);
-            p2.Value = oldPW;
-            PList.Add(p2);
-            DbParameter p3 = new MySqlParameter("@newPW", MySqlDbType.VarChar, 50);
-            p3.Value = newPW;
-            PList.Add(p3);
-            object obj = _idataAccess.GetSingleAnswer(sql, PList);
-            if (obj != null)
-                res = obj.ToString();
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
-        return true;
     }
 }

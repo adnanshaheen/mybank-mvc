@@ -1,0 +1,86 @@
+﻿@model MyBankMVC15.Models.XferChkToSavModel
+
+@{
+    ViewBag.Title = "Transfer";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    <table class="style1">
+        <tr>
+            <td class="myHeading" colspan="3">
+                Transfer Money from Checking to Savings:
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;&nbsp;
+            </td>
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+            <td align="right">
+                Checking Balance
+            </td>
+            <td>
+                @Model.CheckingBalance
+                @Html.HiddenFor(m => m.CheckingBalance)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+            <td align="right">
+                Saving Balance
+            </td>
+            <td>
+                @Model.SavingBalance
+                @Html.HiddenFor(m => m.SavingBalance)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                &nbsp;&nbsp;
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+            <td align="right">
+                Amount To Transfer
+                @Html.TextBoxFor(m => m.AmountTransfer)
+            </td>
+            <td>
+                <input type="submit" value="Transfer" name="btnXfer" id="btnXfer" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                @Html.DisplayTextFor(m => m.Status)
+            </td>
+        </tr>
+    </table>
+}

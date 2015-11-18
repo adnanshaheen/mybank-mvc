@@ -8,8 +8,6 @@ using System.Web;
 /// </summary>
 public interface IBusinessAbstraction
 {
-    string IsValidUser(string uname, string pwd);
-    bool ChangePassword(string uname, string oldpwd, string newpwd);
     bool TransferFromChkgToSav(string chkAcctNum, string savAcctNum, double amt);
     double GetCheckingBalance(string chkAcctNum);
     double GetSavingBalance(string savAcctNum);

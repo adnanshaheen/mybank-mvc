@@ -1,14 +1,23 @@
-﻿using System;
+﻿using MyBankMVC15.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using System.Web.Security;
 
 namespace MyBankMVC15.Controllers
 {
     public class HomeController : Controller
     {
+        private IBusinessAbstraction _business { get; set; }
+
+        protected override void Initialize(RequestContext requestContext)
+        {
+            _business = GenericFactory<BusinessAbstraction, IBusinessAbstraction>.CreateInstance();
+        }
+
         // GET: Home
         public ActionResult Index()
         {
@@ -20,6 +29,14 @@ namespace MyBankMVC15.Controllers
         {
             ViewBag.Username = HttpContext.User.Identity.Name;
             return View();
+        }
+
+        [Authorize(Roles = "customer")]
+        public ActionResult XferChkToSav()
+        {
+            XferChkToSavModel model = new XferChkToSavModel();
+            //model.CheckingBalance = _business.GetCheckingBalance();
+            return View(model);
         }
     }
 }

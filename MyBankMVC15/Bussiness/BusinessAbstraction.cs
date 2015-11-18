@@ -9,13 +9,11 @@ using System.Web;
 /// bridge pattern
 public class BusinessAbstraction : IBusinessAbstraction
 {
-    IRepositoryDataAuthentication _idau = null;
     IRepositoryDataAccount _idac = null;
 
-	public BusinessAbstraction(IRepositoryDataAuthentication idau, IRepositoryDataAccount idac)
+	public BusinessAbstraction(IRepositoryDataAccount idac)
 	{
         _idac = idac;
-        _idau = idau;
 	}
 
     //public BusinessAbstraction() :
@@ -25,24 +23,9 @@ public class BusinessAbstraction : IBusinessAbstraction
     //}
 
     public BusinessAbstraction() :
-        this(GenericFactory<RepositoryMySql, IRepositoryDataAuthentication>.CreateInstance(),
-         GenericFactory<RepositoryMySql, IRepositoryDataAccount>.CreateInstance())
+        this(GenericFactory<RepositoryMySql, IRepositoryDataAccount>.CreateInstance())
     {
     }
-
-    #region IAuthentication Members
-
-    public string IsValidUser(string uname, string pwd)
-    {
-       return _idau.IsValidUser(uname, pwd);
-    }
-
-    public bool ChangePassword(string uname, string oldpwd, string newpwd)
-    {
-        return _idau.UpdatePassword(uname, oldpwd, newpwd);
-    }
-
-    #endregion
 
     #region IBusinessAccount Members
 
