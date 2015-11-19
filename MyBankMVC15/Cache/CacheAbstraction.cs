@@ -15,15 +15,15 @@ public class CacheAbstraction
         _iwebCache = iwebc;
 	}
 
-    public CacheAbstraction()  // default cache provider
-        : this(new HttpContextCacheAdapter())
-    {
-    }
-
     //public CacheAbstraction()  // default cache provider
-    //    : this(new MemCachedAdapter())
+    //    : this(new HttpContextCacheAdapter())
     //{
     //}
+
+    public CacheAbstraction()  // default cache provider
+        : this(new MemCachedAdapter())
+    {
+    }
 
     public void Remove(string key)
     {
