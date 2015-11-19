@@ -1,0 +1,51 @@
+﻿@model IEnumerable<TransferHistory>
+
+@{
+    ViewBag.Title = "Transfer History";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    <h2 class="myHeading">Transfer History</h2>
+    <table style="border:thin solid;border-collapse:collapse;width:80%">
+        <tr align="center">
+            <th class="th">
+                @Html.DisplayNameFor(m => m.First<TransferHistory>().FromAccountNum)
+            </th>
+            <th class="th">
+                @Html.DisplayNameFor(m => m.First<TransferHistory>().ToAccountNum)
+            </th>
+            <th class="th">
+                @Html.DisplayNameFor(m => m.First<TransferHistory>().CheckingAccountNumber)
+            </th>
+            <th class="th">
+                @Html.DisplayNameFor(m => m.First<TransferHistory>().Amount)
+            </th>
+            <th class="th">
+                @Html.DisplayNameFor(m => m.First<TransferHistory>().TransferDate)
+            </th>
+        </tr>
+        @foreach (TransferHistory Transfer in Model)
+        {
+            <tr align="center" class="tr">
+                <td class="td">
+                    @Transfer.FromAccountNum
+                </td>
+                <td class="td">
+                    @Transfer.ToAccountNum
+                </td>
+                <td class="td">
+                    @Transfer.CheckingAccountNumber
+                </td>
+                <td class="td">
+                    @Transfer.Amount
+                </td>
+                <td class="td">
+                    @Transfer.TransferDate
+                </td>
+            </tr>
+        }
+    </table>
+}
+

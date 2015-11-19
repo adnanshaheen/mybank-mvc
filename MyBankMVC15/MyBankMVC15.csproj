@@ -190,6 +190,7 @@
     <Content Include="Views\Auth\Login.cshtml" />
     <Content Include="Views\Auth\ChangePwd.cshtml" />
     <Content Include="Views\Home\XferChkToSav.cshtml" />
+    <Content Include="Views\Home\XferHistory.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

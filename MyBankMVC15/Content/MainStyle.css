@@ -62,3 +62,25 @@
     background-color:#ffff50;
     color:red;
 }
+
+.th {
+    background-color:coral;
+    color:white;
+    border-style: solid;
+    border-width: thin;
+    border-collapse: collapse;
+    border-color:black;
+}
+
+.tr:nth-child(odd) {
+    background-color: #ffffc0;
+}
+.tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.td {
+    border-style: solid;
+    border-width: thin;
+    border-collapse: collapse;
+}

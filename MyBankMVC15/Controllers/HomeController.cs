@@ -58,5 +58,16 @@ namespace MyBankMVC15.Controllers
             }
             return View(model);
         }
+
+        [Authorize]
+        public ActionResult XferHistory()
+        {
+            string AccountNumber = _business.GetCheckingAccount(HttpContext.User.Identity.Name);
+            if (AccountNumber == "")
+                return View();
+
+            List<TransferHistory> TList = _business.GetTransferHistory(AccountNumber);
+            return View(TList);
+        }
     }
 }
