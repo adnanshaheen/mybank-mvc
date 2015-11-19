@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyBankMVC15.DataAccess;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,11 +14,11 @@ namespace MyBankMVC15.Service
     {
         public object SessionKeys { get; private set; }
 
-        private IDataAccess _idataAccess;
+        private IDataAbstraction _idataAccess;
 
         public AuthenticationService()
         {
-            _idataAccess = GenericFactory<DataAccess, IDataAccess>.CreateInstance();
+            _idataAccess = GenericFactory<DataAbstraction, IDataAbstraction>.CreateInstance();
         }
 
         public string GetRolesForUser(string uname)

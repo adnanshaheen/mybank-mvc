@@ -4,23 +4,24 @@ using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
+using MyBankMVC15.DataAccess;
 
 /// <summary>
 /// Summary description for RespositoryMySql
 /// </summary>
 public class RepositoryMySql : IRepositoryDataAccount
 {
-    IDataAccess _idataAccess = null;
+    IDataAbstraction _idataAccess = null;
     CacheAbstraction webCache = null;
 
-	public RepositoryMySql(IDataAccess idac, CacheAbstraction webc)
+	public RepositoryMySql(IDataAbstraction idac, CacheAbstraction webc)
 	{
         _idataAccess = idac;
         webCache = webc;
 	}
 
     public RepositoryMySql()
-        : this(GenericFactory<DataAccessMySql, IDataAccess>.CreateInstance(),
+        : this(GenericFactory<DataAbstraction, IDataAbstraction>.CreateInstance(),
         new CacheAbstraction())
     {
     }
@@ -30,63 +31,60 @@ public class RepositoryMySql : IRepositoryDataAccount
     public bool TransferChkToSav(string chkAcctNum, string savAcctNum, double amt)
     {
         bool res = false;
-        string CONNSTR = ConfigurationManager.ConnectionStrings["BANKMYSQLCONN"].ConnectionString;
+        string CONNSTR = ConfigurationManager.ConnectionStrings["BANKDBCONN"].ConnectionString;
         MySqlConnection conn = new MySqlConnection(CONNSTR);
-        MySqlTransaction Transection = conn.BeginTransaction();
+        MySqlTransaction Transection = null;
 
         try
         {
-            double bal = GetCheckingBalance(chkAcctNum);
-            if (bal > 0)
-            {
-                List<DbParameter> PList = new List<DbParameter>();
-                double newBal = bal - amt;
-                string sql = "Update CheckingAccounts set Balance=@newBal where CheckingAccountNumber=@ChkAcctNum";
-                DbParameter p1 = new MySqlParameter("@newBal", MySqlDbType.Decimal);
-                p1.Value = newBal;
-                PList.Add(p1);
+            conn.Open();
+            Transection = conn.BeginTransaction();
+            DbParameter p1 = new MySqlParameter("@chkAcctNum", MySqlDbType.VarChar, 50);
+            p1.Value = chkAcctNum;
+            string sql1 = "update  CheckingAccounts set balance=balance-" +
+                amt.ToString() + " where checkingaccountnumber=@chkAcctNum";
+            MySqlCommand cmd1 = new MySqlCommand(sql1, conn);
+            cmd1.Parameters.Add(p1);
+            cmd1.Transaction = Transection;
+            int rows = cmd1.ExecuteNonQuery();
 
-                DbParameter p2 = new MySqlParameter("@ChkAcctNum", MySqlDbType.VarChar, 50);
-                p2.Value = chkAcctNum;
-                PList.Add(p2);
+            string sql2 = "select balance from CheckingAccounts where CheckingAccountNumber=@chkAcctNum";
+            DbCommand cmd2 = new MySqlCommand(sql2, conn);
+            cmd2.Parameters.Add(p1);
+            object obal = cmd2.ExecuteScalar();
+            if (double.Parse(obal.ToString()) < 0)
+                throw new Exception("Amount cannot be transferred - results in negative balance..");
 
-                if (_idataAccess.InsOrUpdOrDel(sql, PList) > 0) // technically it should return 1
-                {
-                    //double.Parse(obj.ToString());
-                    newBal = GetSavingBalance(savAcctNum) + amt;
-                    sql = "Update SavingAccounts set Balance=@newBal where SavingAccountNumber=@SavAcctNum";
+            string sql3 = "update  SavingAccounts set balance=balance+" +
+                amt.ToString() + " where SavingAccountnumber=@savAcctNum";
+            MySqlCommand cmd3 = new MySqlCommand(sql3, conn);
+            DbParameter p1a = new MySqlParameter("@savAcctNum", MySqlDbType.VarChar, 50);
+            p1a.Value = savAcctNum;
+            cmd3.Parameters.Add(p1a);
+            cmd3.Transaction = Transection;
+            rows = cmd3.ExecuteNonQuery();
 
-                    PList.Clear();              // clear plist to reuse
-                    p1.Value = newBal;          // since p1 is same type of money, we can reuse it
-                    PList.Add(p1);
+            string sql4 = "insert into TransferHistory(FromAccountNum,ToAccountNum,Amount," +
+                "CheckingAccountNumber) values (@chkAcctNum,@savAcctNum,@amt,@chkAcctNum)";
+            MySqlCommand cmd4 = new MySqlCommand(sql4, conn);
+            DbParameter p4a = new MySqlParameter("@chkAcctNum", MySqlDbType.VarChar, 50);
+            p4a.Value = chkAcctNum;
+            cmd4.Parameters.Add(p4a);
+            DbParameter p4b = new MySqlParameter("@savAcctNum", MySqlDbType.VarChar, 50);
+            p4b.Value = savAcctNum;
+            cmd4.Parameters.Add(p4b);
+            DbParameter p4c = new MySqlParameter("@amt", MySqlDbType.Decimal, 20);
+            p4c.Value = amt;
+            cmd4.Parameters.Add(p4c);
+            cmd4.Transaction = Transection;
+            rows = cmd4.ExecuteNonQuery();
+            Transection.Commit();
+            res = true;
 
-                    DbParameter p3 = new MySqlParameter("@SavAcctNum", MySqlDbType.VarChar, 50);
-                    p3.Value = savAcctNum;      // since p2 is same type of varchar, we can reuse it
-                    PList.Add(p3);
-
-                    if (_idataAccess.InsOrUpdOrDel(sql, PList) > 0) // it should return 1
-                    {
-                        sql = "insert into TransferHistory(FromAccountNum, ToAccountNum, Amount, CheckingAccountNumber)" +
-                            "values (@ChkAcctNum, @SavAcctNum, @amt, @ChkAcctNum)";
-
-                        PList.Clear();
-
-                        p2.Value = chkAcctNum;
-                        PList.Add(p2);
-
-                        p3.Value = savAcctNum;
-                        PList.Add(p3);
-
-                        DbParameter p4 = new MySqlParameter("@amt", MySqlDbType.VarChar, 50);
-                        p4.Value = amt;
-                        PList.Add(p4);
-
-                        res = _idataAccess.InsOrUpdOrDel(sql, PList) > 0 ? true : false;
-                        if (res == true)
-                            Transection.Commit();
-                    }
-                }
-            }
+            // clear cache for TransferHistory
+            string key = String.Format("TransferHistory_{0}",
+                chkAcctNum);
+            webCache.Remove(key);
         }
         catch (Exception ex)
         {

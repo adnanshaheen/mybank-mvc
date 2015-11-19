@@ -141,9 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Bussiness\BusinessAbstraction.cs" />
     <Compile Include="Bussiness\BusinessLayer.cs" />
-    <Compile Include="Bussiness\IBusinessAbstraction.cs" />
     <Compile Include="Bussiness\IBusinessAccount.cs" />
     <Compile Include="Cache\CacheAbstraction.cs" />
     <Compile Include="Cache\HttpContextCacheAdapter.cs" />
@@ -151,12 +149,14 @@
     <Compile Include="Cache\MemCachedAdapter.cs" />
     <Compile Include="Cache\NullObjectCache.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="DataAccess\DataAbstraction.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Bussiness\AuthenticationAbstraction.cs" />
     <Compile Include="DataAccess\AuthhenticationServiceMySql.cs" />
     <Compile Include="DataAccess\DataAccess.cs" />
     <Compile Include="DataAccess\DataAccessMySql.cs" />
     <Compile Include="Bussiness\IAuthenticationAbstraction.cs" />
+    <Compile Include="DataAccess\IDataAbstraction.cs" />
     <Compile Include="DataAccess\IDataAccess.cs" />
     <Compile Include="DataAccess\IRepositoryDataAccount.cs" />
     <Compile Include="DataAccess\Repository.cs" />

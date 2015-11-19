@@ -11,12 +11,12 @@ namespace MyBankMVC15.Controllers
 {
     public class HomeController : Controller
     {
-        private IBusinessAbstraction _business { get; set; }
+        private IBusinessAccount _business { get; set; }
 
         protected override void Initialize(RequestContext requestContext)
         {
             if (_business == null)
-                _business = GenericFactory<BusinessAbstraction, IBusinessAbstraction>.CreateInstance();
+                _business = GenericFactory<IBusinessAccount, IBusinessAccount>.CreateInstance();
 
             base.Initialize(requestContext);
         }

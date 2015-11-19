@@ -4,23 +4,24 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using MyBankMVC15.DataAccess;
 
 /// <summary>
 /// Summary description for DataLayer
 /// </summary>
 public class Repository : IRepositoryDataAccount
 {
-    IDataAccess _idataAccess = null;
+    IDataAbstraction _idataAccess = null;
     CacheAbstraction webCache = null;
 
-    public Repository(IDataAccess ida, CacheAbstraction webc)
+    public Repository(IDataAbstraction ida, CacheAbstraction webc)
     {
         _idataAccess = ida;
         webCache = webc;
     }
 
     public Repository()
-        : this(GenericFactory<DataAccess,IDataAccess>.CreateInstance(),
+        : this(GenericFactory<DataAbstraction, IDataAbstraction>.CreateInstance(),
         new CacheAbstraction())
     {
     }
@@ -32,61 +33,58 @@ public class Repository : IRepositoryDataAccount
         bool res = false;
         string CONNSTR = ConfigurationManager.ConnectionStrings["BANKDBCONN"].ConnectionString;
         SqlConnection conn = new SqlConnection(CONNSTR);
-        SqlTransaction Transection = conn.BeginTransaction();
+        SqlTransaction Transection = null;
 
         try
         {
-            double bal = GetCheckingBalance(chkAcctNum);
-            if (bal > 0)
-            {
-                List<DbParameter> PList = new List<DbParameter>();
-                double newBal = bal - amt;
-                string sql = "Update CheckingAccounts set Balance=@newBal where CheckingAccountNumber=@ChkAcctNum";
-                DbParameter p1 = new SqlParameter("@newBal", SqlDbType.Decimal);
-                p1.Value = newBal;
-                PList.Add(p1);
+            conn.Open();
+            Transection = conn.BeginTransaction();
+            DbParameter p1 = new SqlParameter("@chkAcctNum", SqlDbType.VarChar, 50);
+            p1.Value = chkAcctNum;
+            string sql1 = "update  CheckingAccounts set balance=balance-" +
+                amt.ToString() + " where checkingaccountnumber=@chkAcctNum";
+            SqlCommand cmd1 = new SqlCommand(sql1, conn);
+            cmd1.Parameters.Add(p1);
+            cmd1.Transaction = Transection;
+            int rows = cmd1.ExecuteNonQuery();
 
-                DbParameter p2 = new SqlParameter("@ChkAcctNum", SqlDbType.VarChar, 50);
-                p2.Value = chkAcctNum;
-                PList.Add(p2);
+            string sql2 = "select balance from CheckingAccounts where CheckingAccountNumber=@chkAcctNum";
+            DbCommand cmd2 = new SqlCommand(sql2, conn);
+            cmd2.Parameters.Add(p1);
+            object obal = cmd2.ExecuteScalar();
+            if (double.Parse(obal.ToString()) < 0)
+                throw new Exception("Amount cannot be transferred - results in negative balance..");
 
-                if (_idataAccess.InsOrUpdOrDel(sql, PList) > 0) // technically it should return 1
-                {
-                    //double.Parse(obj.ToString());
-                    newBal = GetSavingBalance(savAcctNum) + amt;
-                    sql = "Update SavingAccounts set Balance=@newBal where SavingAccountNumber=@SavAcctNum";
+            string sql3 = "update  SavingAccounts set balance=balance+" +
+                amt.ToString() + " where SavingAccountnumber=@savAcctNum";
+            SqlCommand cmd3 = new SqlCommand(sql3, conn);
+            DbParameter p1a = new SqlParameter("@savAcctNum", SqlDbType.VarChar, 50);
+            p1a.Value = savAcctNum;
+            cmd3.Parameters.Add(p1a);
+            cmd3.Transaction = Transection;
+            rows = cmd3.ExecuteNonQuery();
 
-                    PList.Clear();              // clear plist to reuse
-                    p1.Value = newBal;          // since p1 is same type of money, we can reuse it
-                    PList.Add(p1);
+            string sql4 = "insert into TransferHistory(FromAccountNum,ToAccountNum,Amount," +
+                "CheckingAccountNumber) values (@chkAcctNum,@savAcctNum,@amt,@chkAcctNum)";
+            SqlCommand cmd4 = new SqlCommand(sql4, conn);
+            DbParameter p4a = new SqlParameter("@chkAcctNum", SqlDbType.VarChar, 50);
+            p4a.Value = chkAcctNum;
+            cmd4.Parameters.Add(p4a);
+            DbParameter p4b = new SqlParameter("@savAcctNum", SqlDbType.VarChar, 50);
+            p4b.Value = savAcctNum;
+            cmd4.Parameters.Add(p4b);
+            DbParameter p4c = new SqlParameter("@amt", SqlDbType.Decimal, 20);
+            p4c.Value = amt;
+            cmd4.Parameters.Add(p4c);
+            cmd4.Transaction = Transection;
+            rows = cmd4.ExecuteNonQuery();
+            Transection.Commit();
+            res = true;
 
-                    DbParameter p3 = new SqlParameter("@SavAcctNum", SqlDbType.VarChar, 50);
-                    p3.Value = savAcctNum;      // since p2 is same type of varchar, we can reuse it
-                    PList.Add(p3);
-
-                    if (_idataAccess.InsOrUpdOrDel(sql, PList) > 0) // it should return 1
-                    {
-                        sql = "insert into TransferHistory(FromAccountNum, ToAccountNum, Amount, CheckingAccountNumber)" +
-                            "values (@ChkAcctNum, @SavAcctNum, @amt, @ChkAcctNum)";
-
-                        PList.Clear();
-
-                        p2.Value = chkAcctNum;
-                        PList.Add(p2);
-
-                        p3.Value = savAcctNum;
-                        PList.Add(p3);
-
-                        DbParameter p4 = new SqlParameter("@amt", SqlDbType.VarChar, 50);
-                        p4.Value = amt;
-                        PList.Add(p4);
-
-                        res = _idataAccess.InsOrUpdOrDel(sql, PList) > 0 ? true : false;
-                        if (res == true)
-                            Transection.Commit();
-                    }
-                }
-            }
+            // clear cache for TransferHistory
+            string key = String.Format("TransferHistory_{0}",
+                chkAcctNum);
+            webCache.Remove(key);
         }
         catch (Exception ex)
         {
