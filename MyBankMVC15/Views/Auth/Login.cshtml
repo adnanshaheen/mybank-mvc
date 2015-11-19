@@ -19,7 +19,11 @@
         <td>@Html.ValidationMessageFor(m => m.Password)</td>
     </tr>
     <tr>
-        <td><input type="submit" value="cancel" name="btnCancel" id="btnCancel"/></td>
+        <td>
+        @if (!Model.Username.IsEmpty()) {
+            <text>Logged in as @Html.ValueFor(m => m.Username)</text>
+        }
+        </td>
         <td><input type="submit" value="Login" name="btnLogin" id="btnLogin"/></td>
     </tr>
 </table>

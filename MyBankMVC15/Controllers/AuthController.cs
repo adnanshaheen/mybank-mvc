@@ -23,6 +23,7 @@ namespace MyBankMVC15.Controllers
         public ActionResult Login()
         {
             LoginModel model = new LoginModel();
+            model.Username = HttpContext.User.Identity.Name;
             return View(model);
         }
 
