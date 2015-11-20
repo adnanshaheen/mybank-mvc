@@ -174,7 +174,7 @@
     <Compile Include="Utilities\IEntity.cs" />
     <Compile Include="Utilities\RepositoryHelper.cs" />
     <Compile Include="Utilities\SessionFacade.cs" />
-    <Compile Include="Utilities\TransferHistory.cs" />
+    <Compile Include="Models\TransferHistory.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
