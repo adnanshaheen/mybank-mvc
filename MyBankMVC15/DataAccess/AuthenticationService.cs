@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 using System.Web;
 using System.Web.Security;
 
-namespace MyBankMVC15.Service
+namespace MyBankMVC15.DataAccess
 {
     public class AuthenticationService : IAuthenticationService
     {

@@ -1,4 +1,4 @@
-﻿using MyBankMVC15.Service;
+﻿using MyBankMVC15.Business;
 using MyBankMVC15.Models;
 using System;
 using System.Web.Mvc;
@@ -9,13 +9,12 @@ namespace MyBankMVC15.Controllers
     [HandleError]
     public class AuthController : Controller
     {
-        public IAuthenticationAbstraction AuthService { get; set; }
-        // public IMyMembershipService MyMembershipService { get; set; }
+        public IBusinessAuthentication AuthService { get; set; }
 
         protected override void Initialize(RequestContext requestContext)
         {
             if (AuthService == null)
-                AuthService = GenericFactory<AuthenticationAbstraction, IAuthenticationAbstraction>.CreateInstance();
+                AuthService = GenericFactory<BusinessLayer, IBusinessAuthentication>.CreateInstance();
            
             base.Initialize(requestContext);
         }

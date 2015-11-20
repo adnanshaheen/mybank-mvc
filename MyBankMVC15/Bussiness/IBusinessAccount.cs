@@ -7,11 +7,14 @@ using System.Data;
 /// <summary>
 /// Summary description for IBusinessAccount
 /// </summary>
-public interface IBusinessAccount
+namespace MyBankMVC15.Business
 {
-    string GetCheckingAccount(string userName);
-    bool TransferFromChkgToSav(string chkAcctNum, string savAcctNum, double amt);
-    double GetCheckingBalance(string chkAcctNum);
-    double GetSavingBalance(string savAcctNum);
-    List<TransferHistory> GetTransferHistory(string chkAcctNum);
+    public interface IBusinessAccount
+    {
+        string GetCheckingAccount(string userName);
+        bool TransferFromChkgToSav(string chkAcctNum, string savAcctNum, double amt);
+        double GetCheckingBalance(string chkAcctNum);
+        double GetSavingBalance(string savAcctNum);
+        List<TransferHistory> GetTransferHistory(string chkAcctNum);
+    }
 }

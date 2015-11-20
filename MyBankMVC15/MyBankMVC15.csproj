@@ -157,11 +157,10 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="DataAccess\DataAbstraction.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Bussiness\AuthenticationAbstraction.cs" />
     <Compile Include="DataAccess\AuthhenticationServiceMySql.cs" />
     <Compile Include="DataAccess\DataAccess.cs" />
     <Compile Include="DataAccess\DataAccessMySql.cs" />
-    <Compile Include="Bussiness\IAuthenticationAbstraction.cs" />
+    <Compile Include="Bussiness\IBusinessAuthentication.cs" />
     <Compile Include="DataAccess\IDataAbstraction.cs" />
     <Compile Include="DataAccess\IDataAccess.cs" />
     <Compile Include="DataAccess\IRepositoryDataAccount.cs" />

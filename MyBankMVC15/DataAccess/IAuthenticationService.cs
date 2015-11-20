@@ -1,4 +1,4 @@
-﻿namespace MyBankMVC15.Service
+﻿namespace MyBankMVC15.DataAccess
 {
     public interface IAuthenticationService
     {

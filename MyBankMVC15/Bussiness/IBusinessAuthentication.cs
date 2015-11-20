@@ -1,6 +1,6 @@
-﻿namespace MyBankMVC15.Service
+﻿namespace MyBankMVC15.Business
 {
-    public interface IAuthenticationAbstraction
+    public interface IBusinessAuthentication
     {
         string GetRolesForUser(string uname);
 
