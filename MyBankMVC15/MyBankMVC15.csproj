@@ -141,8 +141,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Bussiness\BaseState.cs" />
     <Compile Include="Bussiness\BusinessLayer.cs" />
+    <Compile Include="Bussiness\GoldState.cs" />
     <Compile Include="Bussiness\IBusinessAccount.cs" />
+    <Compile Include="Bussiness\OverdrawState.cs" />
+    <Compile Include="Bussiness\PlatinumState.cs" />
+    <Compile Include="Bussiness\SilverState.cs" />
+    <Compile Include="Bussiness\StateEnum.cs" />
     <Compile Include="Cache\CacheAbstraction.cs" />
     <Compile Include="Cache\HttpContextCacheAdapter.cs" />
     <Compile Include="Cache\IWebCache.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data;
+using MyBankMVC15.Bussiness;
 
 /// <summary>
 /// Summary description for BusinessLayer
@@ -10,9 +11,22 @@ using System.Data;
 public class BusinessLayer : IBusinessAccount
 {
     IRepositoryDataAccount idac = null;
+    internal IRepositoryDataAccount dataAccount
+    {
+        get { return idac; }
+    }
+    public double Balance { get; set; }
+    BaseState State;
+    internal BaseState state
+    {
+        get { return State; }
+        set { State = value; }
+    }
+
     public BusinessLayer(IRepositoryDataAccount idacc)
     {
         idac = idacc;
+        state = new SilverState(this);
     }
 
     //public BusinessLayer():
@@ -30,7 +44,16 @@ public class BusinessLayer : IBusinessAccount
 
     public bool TransferFromChkgToSav(string chkAcctNum, string savAcctNum, double amt)
     {
-        return idac.TransferChkToSavViaSP(chkAcctNum,savAcctNum,amt);
+        bool bRes = false;
+        try
+        {
+            bRes = state.TransferFromChkgToSav(chkAcctNum, savAcctNum, amt);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+        return bRes;
     }
 
     #endregion
@@ -43,7 +66,7 @@ public class BusinessLayer : IBusinessAccount
         double res = 0;
         try
         {
-            res = idac.GetCheckingBalance(chkAcctNum);
+            res = state.GetCheckingBalance(chkAcctNum);
         }
         catch (Exception)
         {
@@ -62,7 +85,7 @@ public class BusinessLayer : IBusinessAccount
         double res = 0;
         try
         {
-            res = idac.GetSavingBalance(savAcctNum);
+            res = state.GetSavingBalance(savAcctNum);
         }
         catch (Exception)
         {
@@ -81,7 +104,7 @@ public class BusinessLayer : IBusinessAccount
         List<TransferHistory> TList = null;
         try
         {
-            TList = idac.GetTransferHistory(chkAcctNum);
+            TList = state.GetTransferHistory(chkAcctNum);
         }
         catch (Exception)
         {
@@ -98,7 +121,7 @@ public class BusinessLayer : IBusinessAccount
         string AccountNumber = "";
         try
         {
-            AccountNumber = idac.GetCheckingAccount(userName);
+            AccountNumber = state.GetCheckingAccount(userName);
         }
         catch (Exception)
         {
