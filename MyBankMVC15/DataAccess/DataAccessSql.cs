@@ -8,12 +8,12 @@ using System.Data.Common;
 /// <summary>
 /// Summary description for DataAccess
 /// </summary>
-public class DataAccess : IDataAccess  
+public class DataAccessSql : IDataAccess  
 {
     public static
         string CONNSTR = ConfigurationManager.ConnectionStrings["BANKDBCONN"].ConnectionString;
 
-    public DataAccess()
+    public DataAccessSql()
 	{
 	}
 

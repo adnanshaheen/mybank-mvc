@@ -9,7 +9,7 @@ namespace MyBankMVC15.DataAccess
     public class DataAbstraction : IDataAbstraction
     {
         IDataAccess _idac = null;
-        public DataAbstraction() : this(new DataAccessMySql())
+        public DataAbstraction() : this(new DataAccessSql())
         {
         }
 

@@ -32,18 +32,17 @@ namespace MyBankMVC15.Business
             state = new SilverState(this);
         }
 
-        //public BusinessLayer() :
-        //    this(GenericFactory<AuthhenticationService, IAuthenticationService>.CreateInstance(),
-        //        GenericFactory<Repository, IRepositoryDataAuthentication>.CreateInstance(),
-        //GenericFactory<Repository, IRepositoryDataAccount>.CreateInstance())
-        //{
-        //}
-
         public BusinessLayer() :
-            this(GenericFactory<AuthhenticationServiceMySql, IAuthenticationService>.CreateInstance(),
-                GenericFactory<RepositoryMySql, IRepositoryDataAccount>.CreateInstance())
+            this(GenericFactory<AuthenticationService, IAuthenticationService>.CreateInstance(),
+                GenericFactory<Repository, IRepositoryDataAccount>.CreateInstance())
         {
         }
+
+        //public BusinessLayer() :
+        //    this(GenericFactory<AuthhenticationServiceMySql, IAuthenticationService>.CreateInstance(),
+        //        GenericFactory<RepositoryMySql, IRepositoryDataAccount>.CreateInstance())
+        //{
+        //}
 
         #region IBusinessAccount Members
 
