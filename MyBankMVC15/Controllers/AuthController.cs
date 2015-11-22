@@ -76,18 +76,25 @@ namespace MyBankMVC15.Controllers
 
                 if (rePwd.Equals(newPwd))
                 {
-                    string userName = Utils.StripPunctuation(HttpContext.User.Identity.Name);
-
-                    if (AuthService.ValidateUser(userName, oldPwd))
+                    if (oldPwd.Equals(newPwd))
                     {
-                        if (AuthService.ChangePassword(userName, oldPwd, newPwd))
-                            model.Status = "Password udpated successfully.";
-                        else
-                            model.Status = "Couldn't change password!!!";
+                        model.Status = "Current password and new passwords are same!!!";
                     }
                     else
                     {
-                        model.Status = "Invalid old password ...";
+                        string userName = Utils.StripPunctuation(HttpContext.User.Identity.Name);
+
+                        if (AuthService.ValidateUser(userName, oldPwd))
+                        {
+                            if (AuthService.ChangePassword(userName, oldPwd, newPwd))
+                                model.Status = "Password udpated successfully.";
+                            else
+                                model.Status = "Couldn't change password!!!";
+                        }
+                        else
+                        {
+                            model.Status = "Invalid old password ...";
+                        }
                     }
                 }
                 else
