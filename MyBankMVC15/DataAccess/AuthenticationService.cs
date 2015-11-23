@@ -129,26 +129,26 @@ namespace MyBankMVC15.DataAccess
             if (String.IsNullOrEmpty(userName)) throw new ArgumentException("Value cannot be null or empty.", "userName");
             if (String.IsNullOrEmpty(password)) throw new ArgumentException("Value cannot be null or empty.", "password");
 
-            string sql = "select Username from Users where Username='" +
-                                 userName + "' and Password='" + password + "'";
-            string connStr = ConfigurationManager.ConnectionStrings["BANKDBCONN"].ConnectionString;
-            SqlConnection conn = new SqlConnection(connStr);
             object obj = null;
             try
             {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                obj = cmd.ExecuteScalar();
-                conn.Close();
+                string sql = "select Username from Users where Username=@userName" +
+                    " and Password=@password";
+                List<DbParameter> PList = new List<DbParameter>();
+                DbParameter p1 = new SqlParameter("@userName", SqlDbType.VarChar, 50);
+                p1.Value = userName;
+                PList.Add(p1);
+                DbParameter p2 = new SqlParameter("@password", SqlDbType.VarChar, 50);
+                p2.Value = password;
+                PList.Add(p2);
+
+                obj = _idataAccess.GetSingleAnswer(sql, PList);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            finally
-            {
-                conn.Close();
-            }
+
             if (obj != null)
             {
                 //HttpContext.Current.Session[SessionKeys.USERID] = obj;
