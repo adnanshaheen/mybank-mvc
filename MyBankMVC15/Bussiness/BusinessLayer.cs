@@ -12,6 +12,7 @@ namespace MyBankMVC15.Business
     {
         IRepositoryDataAccount idac = null;
         IAuthenticationService authService = null;
+        RepositoryAbstraction repo = null;
 
         internal IRepositoryDataAccount dataAccount
         {
@@ -25,24 +26,13 @@ namespace MyBankMVC15.Business
             set { State = value; }
         }
 
-        public BusinessLayer(IAuthenticationService auth, IRepositoryDataAccount idacc)
+        public BusinessLayer()
         {
-            idac = idacc;
-            authService = auth;
+            repo = new RepositoryAbstraction();
+            idac = (IRepositoryDataAccount) repo;
+            authService = (IAuthenticationService) repo;
             state = new SilverState(this);
         }
-
-        public BusinessLayer() :
-            this(GenericFactory<AuthenticationService, IAuthenticationService>.CreateInstance(),
-                GenericFactory<Repository, IRepositoryDataAccount>.CreateInstance())
-        {
-        }
-
-        //public BusinessLayer() :
-        //    this(GenericFactory<AuthhenticationServiceMySql, IAuthenticationService>.CreateInstance(),
-        //        GenericFactory<RepositoryMySql, IRepositoryDataAccount>.CreateInstance())
-        //{
-        //}
 
         #region IBusinessAccount Members
 
