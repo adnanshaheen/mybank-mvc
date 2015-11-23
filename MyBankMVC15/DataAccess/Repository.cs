@@ -52,7 +52,10 @@ public class Repository : IRepositoryDataAccount, IAuthenticationService
 
             string sql2 = "select balance from CheckingAccounts where CheckingAccountNumber=@chkAcctNum";
             DbCommand cmd2 = new SqlCommand(sql2, conn);
-            cmd2.Parameters.Add(p1);
+            DbParameter p2 = new SqlParameter("@chkAcctNum", SqlDbType.VarChar, 50);
+            p2.Value = chkAcctNum;
+            cmd2.Parameters.Add(p2);
+            cmd2.Transaction = Transection;
             object obal = cmd2.ExecuteScalar();
             if (double.Parse(obal.ToString()) < 0)
                 throw new Exception("Amount cannot be transferred - results in negative balance..");
@@ -90,12 +93,14 @@ public class Repository : IRepositoryDataAccount, IAuthenticationService
         }
         catch (Exception ex)
         {
-            Transection.Rollback();
+            if (Transection != null)
+                Transection.Rollback();
             throw ex;
         }
         finally
         {
-            Transection.Dispose();
+            if (Transection != null)
+                Transection.Dispose();
         }
 
         return res;
